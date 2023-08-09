@@ -1,0 +1,10 @@
+- hosts: all
+  user: awazu
+
+  tasks:
+    - name: reboot
+      ansible.builtin.reboot: 
+      become: yes
+
+    - name: after reboot
+      ansible.builtin.debug:
