@@ -1,0 +1,9 @@
+- hosts: all
+  user: awazu
+
+  tasks:
+    - name: Start mysql proceess
+      become: true
+      ansible.builtin.systemd:
+        name: mysql
+        state: started
