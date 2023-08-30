@@ -1,0 +1,7 @@
+- hosts: all
+  user: awazu
+
+  tasks:
+    - name: Get CPU information
+      become: true
+      ansible.builtin.shell: cat /proc/cpuinfo > cpuinfo.txt
