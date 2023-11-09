@@ -8,3 +8,4 @@
 
     - name: after reboot
       ansible.builtin.debug:
+        msg: "Reboot is complete !"
