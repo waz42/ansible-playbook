@@ -4,4 +4,4 @@
   tasks:
     - name: Get CPU information
       become: true
-      ansible.builtin.shell: cat /proc/cpuinfo > cpuinfo.txt
+      ansible.builtin.shell: top -b -n 1 > cpuinfo.txt
