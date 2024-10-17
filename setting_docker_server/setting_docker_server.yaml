@@ -1,0 +1,37 @@
+- hosts: Ubuntu
+  become: yes
+
+  tasks:
+  - name: Update and Upgrade repositories 
+    ansible.builtin.apt:
+      update_cache: yes
+      only_upgrade: yes
+
+  - name: Install required system packages
+    apt:
+      pkg:
+        - rpm
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+      state: latest
+      update_cache: true
+
+  - name: Add Docker repo on Fedora
+    block:
+      - name: Add Docker GPG key
+        ansible.builtin.rpm_key:
+          key: "{{ docker_repo_url }}/{{ ansible_distribution | lower }}/gpg"
+          state: present
+  
+      - name: Add Docker repository
+        ansible.builtin.get_url:
+          url: "{{ docker_repo_url }}/{{ ansible_distribution | lower }}/docker-ce.repo"
+          dest: '/etc/yum.repos.d/docker-ce.repo'
+          owner: root
+          group: root
+          mode: 0644
+
+  vars_files:
+    - ./vars.yaml
