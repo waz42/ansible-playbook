@@ -1,4 +1,4 @@
-** Before running playbook, you must modify hosts file about IP address **
+** Before running playbook, you must modify hosts file about IP address ** 
 
 
 '''
