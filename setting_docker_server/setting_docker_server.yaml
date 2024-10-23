@@ -18,20 +18,24 @@
       state: latest
       update_cache: true
 
-  - name: Add Docker repo on Fedora
-    block:
-      - name: Add Docker GPG key
-        ansible.builtin.rpm_key:
-          key: "{{ docker_repo_url }}/{{ ansible_distribution | lower }}/gpg"
-          state: present
-  
-      - name: Add Docker repository
-        ansible.builtin.get_url:
-          url: "{{ docker_repo_url }}/{{ ansible_distribution | lower }}/docker-ce.repo"
-          dest: '/etc/yum.repos.d/docker-ce.repo'
-          owner: root
-          group: root
-          mode: 0644
+  #refference https://docs.docker.com/engine/install/ubuntu/
+  - name: Add Docker's official GPG key
+    shell: |
+      sudo apt-get install ca-certificates curl
+      sudo install -m 0755 -d /etc/apt/keyrings
+      sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+      sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+  - name: Add the repository to Apt sources
+    shell: |
+      echo \
+        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+        $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+        sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+      sudo apt-get update
+
+  - name: Install the latest version
+    shell: sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
   vars_files:
-    - ./vars.yaml
+    - ./vars/vars.yaml
